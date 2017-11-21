@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Runtime.Remoting.Channels;
 using RestSharp;
+using RestSharp.Deserializers;
+using RestSharp.Serializers;
 
 namespace InterpreterCore
 {
@@ -75,76 +78,177 @@ namespace InterpreterCore
         }
         public static Value SetFunction(Interpreter interpreter, List<Value> args)
         {
-            if (args.Count < 3)
-                throw new ArgumentException();
-            if(args[0].Type!=ValueType.Node)
+
+            if (args[0].Type != ValueType.Node)
                 throw new Exception("In Function SetFunction first argument must be a node");
 
-            Console.WriteLine($"{args[0]}, {args[1]}, {args[2]}");
             var client = new RestClient($"Http://{args[0]}:1234");
             var request = new RestRequest("function", Method.POST);
-            request.AddParameter("name",  args[1]);
-            request.AddParameter("body",  args[2]);
-            //request.AddParameter("args",  args[3]);
+
+            if (args.Count == 2)
+            {
+
+                request.AddJsonBody(new
+                {
+                    name = args[1].String,
+                    body = GlobalFunctionsContainer.GlobalFunctions[args[1].String]._body,
+                    paramList = GlobalFunctionsContainer.GlobalFunctions[args[1].String]._argsList
+                });
+            }
+            else
+            {
+                var paramList = new List<String>();
+                for (int i = 3; i < args.Count; i++)
+                {
+                    paramList.Add(args[i].String);
+
+                }
+
+                request.AddJsonBody(new
+                {
+                    name = args[1].String,
+                    body = args[2].String,
+                    paramList
+                });
+            }
+
+            request.AddHeader("Content-type", "application/json");
+            request.RequestFormat = DataFormat.Json;
             IRestResponse response = client.Execute(request);
             var content = response.Content;
             Console.WriteLine(content);
-            return new Value(0);
+            return new Value("OK");
         }
+
+
+
         public static Value GetFunction(Interpreter interpreter, List<Value> args)
-        {
-            if (args.Count < 3)
-                throw new ArgumentException();
-            if(args[0].Type!=ValueType.Node)
-                throw new Exception("In Function GetFunction first argument must be a node");
-
-            Console.WriteLine($"{args[0]}, {args[1]}, {args[2]}");
-
-            return new Value(0);
-        }
-        public static Value GetVar(Interpreter interpreter, List<Value> args)
         {
             if (args.Count < 2)
                 throw new ArgumentException();
-            if(args[0].Type!=ValueType.Node)
-                throw new Exception("In Function GetVar first argument must be a node");
+            if (args[0].Type != ValueType.Node)
+                Console.WriteLine($"{args[0]}, {args[1]}, {args[2]}");
 
-            Console.WriteLine($"{args[0]}, {args[1]}, {args[2]}");
+            try
+            {
+                var client = new RestClient($"Http://{args[0]}:1234");
 
-            return new Value(0);
+                var request = new RestRequest("function/{name}", Method.GET);
+                request.AddUrlSegment("name", args[1].String);
+                request.AddHeader("Content-type", "application/json");
+                request.RequestFormat = DataFormat.Json;
+                IRestResponse response = client.Execute(request);
+                GlobalFunctionsContainer.GlobalFunctions.Add(args[1].String,
+                    new JsonDeserializer().Deserialize<CustomFunction>(response)
+                );
+                return new Value("OK");
+            }
+            catch (Exception ex)
+            {
+                return new Value("ERR");
+            }
         }
-        public static Value SetVar(Interpreter interpreter, List<Value> args)
-        {
-            if (args.Count < 3)
-                throw new ArgumentException();
-            if(args[0].Type!=ValueType.Node)
-                throw new Exception("In Function SetVar first argument must be a node");
 
-            Console.WriteLine($"{args[0]}, {args[1]}, {args[2]}");
-
-            return new Value(0);
-        }
         public static Value InvokeSync(Interpreter interpreter, List<Value> args)
         {
             if (args.Count < 2)
                 throw new ArgumentException();
-            if(args[0].Type!=ValueType.Node)
-                throw new Exception("In Function InvokeSync first argument must be a node");
+            if (args[0].Type != ValueType.Node)
+                Console.WriteLine($"{args[0]}, {args[1]}, {args[2]}");
 
-            Console.WriteLine($"{args[0]}, {args[1]}, {args[2]}");
+            try
+            {
+                var client = new RestClient($"Http://{args[0]}:1234");
 
-            return new Value(0);
+                var request = new RestRequest("function/{name}/invokesync", Method.POST);
+                request.AddUrlSegment("name", args[1].String);
+                request.AddHeader("Content-type", "application/json");
+                request.RequestFormat = DataFormat.Json;
+                var _paramList = new List<Value>();
+                for (int i = 2; i < args.Count; i++)
+                {
+                    _paramList.Add(args[i]);
+
+                }
+
+                request.AddJsonBody(new
+                {
+                    paramList = _paramList
+                });
+
+
+
+                IRestResponse response = client.Execute(request);
+                return new JsonDeserializer().Deserialize<Value>(response);
+            }
+            catch (Exception ex)
+            {
+                return new Value("ERR");
+            }
         }
         public static Value InvokeAsync(Interpreter interpreter, List<Value> args)
         {
             if (args.Count < 3)
                 throw new ArgumentException();
-            if(args[0].Type!=ValueType.Node)
+            if (args[0].Type != ValueType.Node)
                 throw new Exception("In Function InvokeAsync first argument must be a node");
 
             Console.WriteLine($"{args[0]}, {args[1]}, {args[2]}");
 
             return new Value(0);
+        }
+
+        public static Value GetVar(Interpreter interpreter, List<Value> args)
+        {
+            if (args.Count < 2)
+                throw new ArgumentException();
+            if (args[0].Type != ValueType.Node)
+                Console.WriteLine($"ERROR 1st argument must be a node");
+
+            try
+            {
+                var client = new RestClient($"Http://{args[0]}:1234");
+
+                var request = new RestRequest("variable/{name}", Method.GET);
+                request.AddUrlSegment("name", args[1].String);
+                request.AddHeader("Content-type", "application/json");
+                request.RequestFormat = DataFormat.Json;
+                IRestResponse response = client.Execute(request);
+                return new JsonDeserializer().Deserialize<Value>(response);
+            }
+            catch (Exception ex)
+            {
+                return new Value("ERR");
+            }
+        }
+        public static Value SetVar(Interpreter interpreter, List<Value> args)
+        {
+            if (args.Count < 3)
+                throw new ArgumentException();
+            if (args[0].Type != ValueType.Node)
+                Console.WriteLine($"{args[0]}, {args[1]}, {args[2]}");
+
+            try
+            {
+                var client = new RestClient($"Http://{args[0]}:1234");
+
+                var request = new RestRequest("variable", Method.POST);
+                request.AddHeader("Content-type", "application/json");
+                request.RequestFormat = DataFormat.Json;
+
+                request.AddJsonBody(new
+                {
+                    name = args[1].String,
+                    value = args[2]
+                });
+
+                IRestResponse response = client.Execute(request);
+                return new Value("OK");
+            }
+            catch (Exception ex)
+            {
+                return new Value("ERR");
+            }
         }
     }
 }
