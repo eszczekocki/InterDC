@@ -20,12 +20,17 @@ namespace Service
         {
 
             Get["/variable/{name}"] = parameters =>
-                GlobalVariablesContainer.GlobalVars[parameters.name];
+            {
+                Console.WriteLine($"GOT get /variable/{parameters.name}");
 
+                return GlobalVariablesContainer.GlobalVars[parameters.name];
+            };
             Post["/variable"] = parameters =>
             {
 
                 var model = this.Bind<Variable>();
+                Console.WriteLine($"GOT post /variable/{model.name} {model.value}");
+
                 if (GlobalVariablesContainer.GlobalVars.ContainsKey(model.name) == false)
                     GlobalVariablesContainer.GlobalVars.Add(model.name, model.value);
                 else
