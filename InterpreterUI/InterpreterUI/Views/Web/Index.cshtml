@@ -1,0 +1,55 @@
+﻿@model InterpreterUI.Models.ServiceMessage
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container">
+    
+    <div style="margin:40px;">
+        Zapytanie:
+    </div>
+
+    <div style="margin:40px;">
+        @using (Html.BeginForm("Index", "Web", FormMethod.Post))
+        {
+            <div class="row">
+                <div class="well well-lg">
+                    <div class="media1">
+                        <div class="media-body">
+
+                            <div class="form-group" style="padding:12px;">
+                                @Html.TextAreaFor(model => model.request, new { @class = "form-control animated" })
+                                <button class="btn btn-info pull-right" style="margin-top:10px" type="submit">Share</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+
+    <div style="margin:40px;">
+        Odpowiedź:
+        </div>
+
+        <div style="margin:40px;">
+            <div class="row">
+                <div class="well well-lg">
+                    <div class="media1">
+                        <div class="media-body">
+
+                            <div class="form-group" style="padding:12px; white-space: pre-line;">
+                                @Html.DisplayTextFor(model => model.response)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <script src="~/Scripts/autosize.js"></script>
+    <script>
+        autosize(document.querySelectorAll('textarea'));
+    </script>

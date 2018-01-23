@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterpreterCore", "Interpreter\InterpreterCore.csproj", "{EE73A059-52E2-4E50-B9EB-115C9A0A4AF6}"
 EndProject
@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interpreter.Test", "Interpr
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{B9DCABEC-A8DD-42DB-A9C1-910E9BF5F43A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterpreterUI", "InterpreterUI\InterpreterUI\InterpreterUI.csproj", "{349F0CC9-3C34-4F6F-B300-BFE9755936B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,9 +56,24 @@ Global
 		{B9DCABEC-A8DD-42DB-A9C1-910E9BF5F43A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B9DCABEC-A8DD-42DB-A9C1-910E9BF5F43A}.Release|x86.ActiveCfg = Release|Any CPU
 		{B9DCABEC-A8DD-42DB-A9C1-910E9BF5F43A}.Release|x86.Build.0 = Release|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Debug|x86.Build.0 = Debug|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Release|x86.ActiveCfg = Release|Any CPU
+		{349F0CC9-3C34-4F6F-B300-BFE9755936B7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A1B3DF05-19BC-4320-902A-4552FC8388E5}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Interpreter.Test\Interpreter.Test.csproj

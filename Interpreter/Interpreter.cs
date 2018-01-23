@@ -14,6 +14,8 @@ namespace InterpreterCore
         private readonly Dictionary<string, BasicFunction> _funcs = new Dictionary<string, BasicFunction>();
         private readonly Dictionary<string, CustomFunction> _customFuncs = new Dictionary<string, CustomFunction>();
 
+        public string outputValue { get; set; }
+
 
         private readonly int _operationIfcounter = 0;
 
@@ -215,7 +217,9 @@ namespace InterpreterCore
 
         void Print()
         {
-          Console.WriteLine(Expr().ToString());
+            //Console.WriteLine(Expr().ToString());
+            outputValue += String.Concat(Expr().ToString(), Environment.NewLine);
+            
         }
 
 
